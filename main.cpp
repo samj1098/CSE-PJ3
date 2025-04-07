@@ -40,27 +40,21 @@ void runInstructions() {
     while (cin >> command) {
         if (command == "Stop") {
             break;
-        }
-        else if (command == "PrintADJ") {
+        } else if (command == "PrintADJ") {
             printAdj();
-        }
-        else if (command == "SinglePair") {
+        } else if (command == "SinglePair") {
             cin >> s >> t;
             dijkstra(s, t);
-        }
-        else if (command == "SingleSource") {
+        } else if (command == "SingleSource") {
             cin >> s;
-            dijkstra(s, -1); // t = -1 for full-source mode
-        }
-        else if (command == "PrintPath") {
+            dijkstra(s, -1);
+        } else if (command == "PrintPath") {
             cin >> s >> t;
             printPath(s, t);
-        }
-        else if (command == "PrintLength") {
+        } else if (command == "PrintLength") {
             cin >> s >> t;
             printLength(s, t);
-        }
-        else {
+        } else {
             cerr << "Invalid instruction." << endl;
         }
     }
