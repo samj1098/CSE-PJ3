@@ -21,7 +21,6 @@ void readGraph(const char* filename, const char* graphType, int flag) {
     }
 
     isDirected = strcmp(graphType, "DirectedGraph") == 0;
-
     fscanf(fp, "%d %d", &n, &m);
 
     V = (pVERTEX*) calloc(n + 1, sizeof(pVERTEX));
@@ -49,7 +48,6 @@ void readGraph(const char* filename, const char* graphType, int flag) {
         nodeUV->w = w;
         nodeUV->next = nullptr;
 
-        // always insert at rear (regardless of flag)
         if (ADJ[u] == nullptr) {
             ADJ[u] = nodeUV;
         } else {
@@ -59,7 +57,7 @@ void readGraph(const char* filename, const char* graphType, int flag) {
             temp->next = nodeUV;
         }
 
-        // For undirected graphs: add edge v → u
+        // v → u for undirected graphs
         if (!isDirected) {
             pNODE nodeVU = (pNODE) malloc(sizeof(NODE));
             nodeVU->index = edgeIndex;
@@ -117,7 +115,6 @@ void dijkstra(int source, int destination) {
         while (neighbor != nullptr) {
             int vIndex = neighbor->v;
             pVERTEX v = V[vIndex];
-
             double newKey = u->key + neighbor->w;
 
             if (v->color == WHITE) {
@@ -156,7 +153,7 @@ void printPath(int s, int t) {
 
     while (!isEmpty(stack)) {
         pVERTEX v = pop(stack);
-        cout << "[" << v->index << ": " << fixed << setprecision(2) << setw(5) << v->key << "]";
+        cout << "[" << v->index << ": " << fixed << setprecision(2) << setw(8) << v->key << "]";
         if (!isEmpty(stack)) cout << "-->";
     }
 
