@@ -1,8 +1,0 @@
-PrintADJ
-SinglePair 1 3
-PrintPath 1 3
-PrintLength 1 3
-SinglePair 1 6
-PrintPath 1 6
-PrintLength 1 6
-Stop
