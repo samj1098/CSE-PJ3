@@ -41,7 +41,6 @@ void readGraph(const char* filename, const char* graphType, int flag) {
         double w;
         fscanf(fp, "%d %d %d %lf", &edgeIndex, &u, &v, &w);
 
-        // u --> v
         pNODE nodeUV = (pNODE) malloc(sizeof(NODE));
         nodeUV->index = edgeIndex;
         nodeUV->u = u;
@@ -49,15 +48,19 @@ void readGraph(const char* filename, const char* graphType, int flag) {
         nodeUV->w = w;
         nodeUV->next = nullptr;
 
-        if (ADJ[u] == nullptr) {
+        if (flag == 0) {
+            nodeUV->next = ADJ[u];
             ADJ[u] = nodeUV;
         } else {
-            pNODE temp = ADJ[u];
-            while (temp->next != nullptr) temp = temp->next;
-            temp->next = nodeUV;
+            if (ADJ[u] == nullptr) {
+                ADJ[u] = nodeUV;
+            } else {
+                pNODE temp = ADJ[u];
+                while (temp->next != nullptr) temp = temp->next;
+                temp->next = nodeUV;
+            }
         }
 
-        // if undirected, v --> u
         if (!isDirected) {
             pNODE nodeVU = (pNODE) malloc(sizeof(NODE));
             nodeVU->index = edgeIndex;
@@ -66,12 +69,17 @@ void readGraph(const char* filename, const char* graphType, int flag) {
             nodeVU->w = w;
             nodeVU->next = nullptr;
 
-            if (ADJ[v] == nullptr) {
+            if (flag == 0) {
+                nodeVU->next = ADJ[v];
                 ADJ[v] = nodeVU;
             } else {
-                pNODE temp = ADJ[v];
-                while (temp->next != nullptr) temp = temp->next;
-                temp->next = nodeVU;
+                if (ADJ[v] == nullptr) {
+                    ADJ[v] = nodeVU;
+                } else {
+                    pNODE temp = ADJ[v];
+                    while (temp->next != nullptr) temp = temp->next;
+                    temp->next = nodeVU;
+                }
             }
         }
     }
