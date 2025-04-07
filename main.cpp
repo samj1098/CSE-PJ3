@@ -48,7 +48,7 @@ void runInstructions() {
         } else if (command == "SingleSource") {
             cin >> s;
             dijkstra(s, -1);
-	else if (command == "PrintPath") {
+	}else if (command == "PrintPath") {
     cin >> s >> t;
     if (!ranDijkstra || lastSource != s) {
         dijkstra(s, -1); // run Dijkstra again with the correct source
