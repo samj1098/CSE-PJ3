@@ -14,15 +14,17 @@ pNODE* ADJ = nullptr;
 bool isDirected = true;
 
 void readGraph(const char* filename, const char* graphType, int flag) {
-	FILE* fp = fopen(filename, "r");
-	if (fp == nullptr) {
-		cerr << "Error: Cannot open file " << filename << endl;
-	}
-	isDirected = strcmp(graphType, "DirectedGraph") == 0;
+    FILE* fp = fopen(filename, "r");
+    if (fp == nullptr) {
+        cerr << "Error: Cannot open file " << filename << endl;
+        exit(1);
+    }
 
-	fscanf(fp, "%d %d", &n, &m);
-	
-	V = (pVERTEX*) calloc(n + 1, sizeof(pVERTEX));
+    isDirected = strcmp(graphType, "DirectedGraph") == 0;
+
+    fscanf(fp, "%d %d", &n, &m);
+
+    V = (pVERTEX*) calloc(n + 1, sizeof(pVERTEX));
     ADJ = (pNODE*) calloc(n + 1, sizeof(pNODE));
 
     for (int i = 1; i <= n; i++) {
@@ -47,21 +49,17 @@ void readGraph(const char* filename, const char* graphType, int flag) {
         nodeUV->w = w;
         nodeUV->next = nullptr;
 
-        if (flag == 0) {
-            nodeUV->next = ADJ[u];
+        // always insert at rear (regardless of flag)
+        if (ADJ[u] == nullptr) {
             ADJ[u] = nodeUV;
         } else {
-            if (ADJ[u] == nullptr) {
-                ADJ[u] = nodeUV;
-            } else {
-                pNODE temp = ADJ[u];
-                while (temp->next != nullptr)
-                    temp = temp->next;
-                temp->next = nodeUV;
-            }
+            pNODE temp = ADJ[u];
+            while (temp->next != nullptr)
+                temp = temp->next;
+            temp->next = nodeUV;
         }
 
-        // v → u for undirected graphs
+        // For undirected graphs: add edge v → u
         if (!isDirected) {
             pNODE nodeVU = (pNODE) malloc(sizeof(NODE));
             nodeVU->index = edgeIndex;
@@ -70,18 +68,13 @@ void readGraph(const char* filename, const char* graphType, int flag) {
             nodeVU->w = w;
             nodeVU->next = nullptr;
 
-            if (flag == 0) {
-                nodeVU->next = ADJ[v];
+            if (ADJ[v] == nullptr) {
                 ADJ[v] = nodeVU;
             } else {
-                if (ADJ[v] == nullptr) {
-                    ADJ[v] = nodeVU;
-                } else {
-                    pNODE temp = ADJ[v];
-                    while (temp->next != nullptr)
-                        temp = temp->next;
-                    temp->next = nodeVU;
-                }
+                pNODE temp = ADJ[v];
+                while (temp->next != nullptr)
+                    temp = temp->next;
+                temp->next = nodeVU;
             }
         }
     }
@@ -90,31 +83,31 @@ void readGraph(const char* filename, const char* graphType, int flag) {
 }
 
 void printAdj() {
-for (int i = 1; i <= n; i++) {
-	cout << "ADJ[" << i << "]:";
-	pNODE curr = ADJ[i];
-	while (curr != nullptr) {
-		printf("-->[%d %d: %4.2lf]", curr->index, curr->v, curr->w);
-		curr = curr->next;
-	}
-	cout << endl;
-}
+    for (int i = 1; i <= n; i++) {
+        cout << "ADJ[" << i << "]:";
+        pNODE curr = ADJ[i];
+        while (curr != nullptr) {
+            printf("-->[%d %d: %4.2lf]", curr->index, curr->v, curr->w);
+            curr = curr->next;
+        }
+        cout << endl;
+    }
 }
 
 void dijkstra(int source, int destination) {
-for (int i = 1; i <= n; i++) {
-	V[i]->key = DBL_MAX;
-	V[i]->pi = -1;
-	V[i]->color = WHITE;
-	V[i]->position = 0;
-}
+    for (int i = 1; i <= n; i++) {
+        V[i]->key = DBL_MAX;
+        V[i]->pi = -1;
+        V[i]->color = WHITE;
+        V[i]->position = 0;
+    }
 
-pHEAP heap = createHeap(n);
-V[source]->key = 0.0;
-V[source]->color = GRAY;
-Insert(heap, V, source);
+    pHEAP heap = createHeap(n);
+    V[source]->key = 0.0;
+    V[source]->color = GRAY;
+    Insert(heap, V, source);
 
-while (heap->size > 0) {
+    while (heap->size > 0) {
         pVERTEX u = ExtractMin(heap, V);
         u->color = BLACK;
 
@@ -146,7 +139,7 @@ while (heap->size > 0) {
 }
 
 void printPath(int s, int t) {
-if (V[t]->pi == -1 || V[t]->key == DBL_MAX) {
+    if (V[t]->pi == -1 || V[t]->key == DBL_MAX) {
         cout << "There is no path from " << s << " to " << t << "." << endl;
         return;
     }
@@ -172,7 +165,7 @@ if (V[t]->pi == -1 || V[t]->key == DBL_MAX) {
 }
 
 void printLength(int s, int t) {
-if (V[t]->pi == -1 || V[t]->key == DBL_MAX) {
+    if (V[t]->pi == -1 || V[t]->key == DBL_MAX) {
         cout << "There is no path from " << s << " to " << t << "." << endl;
     } else {
         cout << "The length of the shortest path from " << s << " to " << t << " is: ";
