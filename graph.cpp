@@ -41,24 +41,41 @@ void readGraph(const char* filename, const char* graphType, int flag) {
         double w;
         fscanf(fp, "%d %d %d %lf", &edgeIndex, &u, &v, &w);
 
-        // Insert u → v at the front of ADJ[u]
+        // Create u → v
         pNODE nodeUV = (pNODE) malloc(sizeof(NODE));
         nodeUV->index = edgeIndex;
         nodeUV->u = u;
         nodeUV->v = v;
         nodeUV->w = w;
-        nodeUV->next = ADJ[u];
-        ADJ[u] = nodeUV;
+        nodeUV->next = nullptr;
 
-        // For undirected graphs, also insert v → u at front of ADJ[v]
+        // Insert at REAR of ADJ[u]
+        if (ADJ[u] == nullptr) {
+            ADJ[u] = nodeUV;
+        } else {
+            pNODE temp = ADJ[u];
+            while (temp->next != nullptr)
+                temp = temp->next;
+            temp->next = nodeUV;
+        }
+
+        // If undirected, create and insert v → u at REAR of ADJ[v]
         if (!isDirected) {
             pNODE nodeVU = (pNODE) malloc(sizeof(NODE));
             nodeVU->index = edgeIndex;
             nodeVU->u = v;
             nodeVU->v = u;
             nodeVU->w = w;
-            nodeVU->next = ADJ[v];
-            ADJ[v] = nodeVU;
+            nodeVU->next = nullptr;
+
+            if (ADJ[v] == nullptr) {
+                ADJ[v] = nodeVU;
+            } else {
+                pNODE temp = ADJ[v];
+                while (temp->next != nullptr)
+                    temp = temp->next;
+                temp->next = nodeVU;
+            }
         }
     }
 
