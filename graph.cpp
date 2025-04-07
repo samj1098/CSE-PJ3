@@ -138,7 +138,7 @@ void printPath(int s, int t) {
 
     while (!isEmpty(stack)) {
         pVERTEX v = pop(stack);
-        cout << "[" << v->index << ": " << fixed << setprecision(2) << setw(8) << v->key << "]";
+        cout << "[" << v->index << ":" << fixed << setprecision(2) << setw(8) << v->key << "]";
         if (!isEmpty(stack)) cout << "-->";
     }
 
