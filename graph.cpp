@@ -87,7 +87,7 @@ void printAdj() {
         cout << "ADJ[" << i << "]:";
         pNODE curr = ADJ[i];
         while (curr != nullptr) {
-            printf("-->[%d %d: %4.2lf]", curr->index, curr->v, curr->w);
+            printf("-->[%d %d: %4.2lf]", curr->u, curr->v, curr->w);
             curr = curr->next;
         }
         cout << endl;
