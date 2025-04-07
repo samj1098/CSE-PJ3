@@ -11,6 +11,9 @@
 
 using namespace std;
 
+bool ranDijkstra = false;
+int lastSource = -1;
+
 int main(int argc, char* argv[]) {
     if (argc != 4) {
         printUsage();
@@ -36,10 +39,6 @@ int main(int argc, char* argv[]) {
 void runInstructions() {
     string command;
     int s, t;
-    
-    // ✅ Add these two lines to track last Dijkstra call
-    int lastSource = -1;
-    bool ranDijkstra = false;
 
     while (cin >> command) {
         if (command == "Stop") {
@@ -49,31 +48,29 @@ void runInstructions() {
         } else if (command == "SinglePair") {
             cin >> s >> t;
             dijkstra(s, t);
-            lastSource = s;
             ranDijkstra = true;
+            lastSource = s;
         } else if (command == "SingleSource") {
             cin >> s;
             dijkstra(s, -1);
-            lastSource = s;
             ranDijkstra = true;
+            lastSource = s;
         } else if (command == "PrintPath") {
             cin >> s >> t;
             if (!ranDijkstra || lastSource != s) {
-                dijkstra(s, -1);
-                lastSource = s;
-                ranDijkstra = true;
+                cerr << "Error: Invalid instruction." << endl;
+            } else {
+                printPath(s, t);
             }
-            printPath(s, t);
         } else if (command == "PrintLength") {
             cin >> s >> t;
             if (!ranDijkstra || lastSource != s) {
-                dijkstra(s, -1);
-                lastSource = s;
-                ranDijkstra = true;
+                cerr << "Error: Invalid instruction." << endl;
+            } else {
+                printLength(s, t);
             }
-            printLength(s, t);
         } else {
-            cerr << "Invalid instruction." << endl;
+            cerr << "Error: Invalid instruction." << endl;
         }
     }
 }
