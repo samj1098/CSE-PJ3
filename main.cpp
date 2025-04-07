@@ -36,6 +36,10 @@ int main(int argc, char* argv[]) {
 void runInstructions() {
     string command;
     int s, t;
+    
+    // ✅ Add these two lines to track last Dijkstra call
+    int lastSource = -1;
+    bool ranDijkstra = false;
 
     while (cin >> command) {
         if (command == "Stop") {
@@ -45,19 +49,28 @@ void runInstructions() {
         } else if (command == "SinglePair") {
             cin >> s >> t;
             dijkstra(s, t);
+            lastSource = s;
+            ranDijkstra = true;
         } else if (command == "SingleSource") {
             cin >> s;
             dijkstra(s, -1);
-	}else if (command == "PrintPath") {
-    cin >> s >> t;
-    if (!ranDijkstra || lastSource != s) {
-        dijkstra(s, -1); // run Dijkstra again with the correct source
-        lastSource = s;
-        ranDijkstra = true;
-    }
-    printPath(s, t);
+            lastSource = s;
+            ranDijkstra = true;
+        } else if (command == "PrintPath") {
+            cin >> s >> t;
+            if (!ranDijkstra || lastSource != s) {
+                dijkstra(s, -1);
+                lastSource = s;
+                ranDijkstra = true;
+            }
+            printPath(s, t);
         } else if (command == "PrintLength") {
             cin >> s >> t;
+            if (!ranDijkstra || lastSource != s) {
+                dijkstra(s, -1);
+                lastSource = s;
+                ranDijkstra = true;
+            }
             printLength(s, t);
         } else {
             cerr << "Invalid instruction." << endl;
