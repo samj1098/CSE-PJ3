@@ -21,6 +21,7 @@ void readGraph(const char* filename, const char* graphType, int flag) {
     }
 
     isDirected = strcmp(graphType, "DirectedGraph") == 0;
+
     fscanf(fp, "%d %d", &n, &m);
 
     V = (pVERTEX*) calloc(n + 1, sizeof(pVERTEX));
@@ -40,40 +41,24 @@ void readGraph(const char* filename, const char* graphType, int flag) {
         double w;
         fscanf(fp, "%d %d %d %lf", &edgeIndex, &u, &v, &w);
 
-        // u → v
+        // Insert u → v at the front of ADJ[u]
         pNODE nodeUV = (pNODE) malloc(sizeof(NODE));
         nodeUV->index = edgeIndex;
         nodeUV->u = u;
         nodeUV->v = v;
         nodeUV->w = w;
-        nodeUV->next = nullptr;
+        nodeUV->next = ADJ[u];
+        ADJ[u] = nodeUV;
 
-        if (ADJ[u] == nullptr) {
-            ADJ[u] = nodeUV;
-        } else {
-            pNODE temp = ADJ[u];
-            while (temp->next != nullptr)
-                temp = temp->next;
-            temp->next = nodeUV;
-        }
-
-        // v → u for undirected graphs
+        // For undirected graphs, also insert v → u at front of ADJ[v]
         if (!isDirected) {
             pNODE nodeVU = (pNODE) malloc(sizeof(NODE));
             nodeVU->index = edgeIndex;
             nodeVU->u = v;
             nodeVU->v = u;
             nodeVU->w = w;
-            nodeVU->next = nullptr;
-
-            if (ADJ[v] == nullptr) {
-                ADJ[v] = nodeVU;
-            } else {
-                pNODE temp = ADJ[v];
-                while (temp->next != nullptr)
-                    temp = temp->next;
-                temp->next = nodeVU;
-            }
+            nodeVU->next = ADJ[v];
+            ADJ[v] = nodeVU;
         }
     }
 
